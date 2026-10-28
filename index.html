@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>COI Centro Oftalmológico</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;800&display=swap" rel="stylesheet">
+<style>
+/* Layout: full-width bands (nav, blue hero with iris motif, atendimentos, médicos, como funciona, agendamento, rodapé), content centered at 1040px. */
+:root{--bg:#F6F9FD;--bg2:#EAF1F9;--card:#FFFFFF;--ink:#0A2540;--mut:#53708F;--line:#DFE8F3;--hero:#0A3F8F;--brand:#0B4AA2;--acc:#087F8C;--on:#FFFFFF;--soft:#E3F3F5;--bad:#B3261E;--font:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#061830;--bg2:#08203E;--card:#0D2748;--ink:#E8F1FB;--mut:#9DB6D6;--line:#21426F;--hero:#0A3F8F;--brand:#4C8FE0;--acc:#3CC8D6;--on:#041A2E;--soft:#12395F;--bad:#FF9E96;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#061830;--bg2:#08203E;--card:#0D2748;--ink:#E8F1FB;--mut:#9DB6D6;--line:#21426F;--hero:#0A3F8F;--brand:#4C8FE0;--acc:#3CC8D6;--on:#041A2E;--soft:#12395F;--bad:#FF9E96;color-scheme:dark}
+*,*:before,*:after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.6 var(--font)}
+.wrap{max-width:1040px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+a{color:inherit}
+h1,h2,h3,p{margin:0}
+.btn{display:inline-block;font:inherit;font-weight:800;font-size:15px;text-decoration:none;border:0;border-radius:12px;padding:13px 22px;cursor:pointer;text-align:center}
+.btn.pri{background:var(--acc);color:var(--on)}
+.btn.ghost{background:transparent;color:#fff;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.45)}
+.btn.sm{padding:10px 18px;font-size:14px}
+:focus-visible{outline:3px solid var(--acc);outline-offset:3px}
+
+/* nav */
+.nav{background:var(--card);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:12px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;min-width:0}
+.brand svg{width:46px;height:auto;flex:none}
+.brand b{display:block;font-size:20px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.brand span{display:block;font-size:12px;color:var(--mut);font-weight:600;line-height:1.2}
+.nav .links{display:flex;align-items:center;gap:22px;font-size:14px;font-weight:600}
+.nav .links a.t{text-decoration:none;color:var(--mut)}
+@media(max-width:640px){.nav .links a.t{display:none}.brand span{display:none}}
+
+/* hero */
+.hero{background:var(--hero);color:#fff;overflow:hidden}
+.hero .wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:32px;align-items:center;padding-block:64px 56px}
+.hero h1{font-size:clamp(34px,6vw,56px);font-weight:800;line-height:1.04;letter-spacing:-.035em;text-wrap:balance}
+.hero .lead{margin-top:18px;font-size:clamp(16px,2.2vw,19px);opacity:.88;max-width:34em}
+.hero .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+.iris{width:100%;max-width:340px;height:auto;justify-self:end}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid rgba(255,255,255,.2)}
+.facts .wrap{display:contents}
+.fact{padding:20px 20px 24px 0}
+.fact b{display:block;font-size:15px;font-weight:800}
+.fact span{display:block;font-size:14px;opacity:.78;line-height:1.45;margin-top:2px}
+.factsband{background:var(--hero);color:#fff}
+.factsband .inner{max-width:1040px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.factsband .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;border-top:1px solid rgba(255,255,255,.2);padding-block:22px 28px}
+@media(max-width:760px){.hero .wrap{grid-template-columns:1fr;padding-block:40px 32px}.iris{max-width:200px;justify-self:start}.factsband .grid3{grid-template-columns:1fr;gap:14px}}
+
+/* generic section */
+.sec{padding-block:72px}
+.sec.alt{background:var(--bg2)}
+.eyebrow{font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--acc);margin-bottom:10px}
+.sec h2{font-size:clamp(26px,4vw,36px);font-weight:800;letter-spacing:-.03em;line-height:1.12;text-wrap:balance;max-width:20em}
+.sec .sub{margin-top:12px;color:var(--mut);max-width:38em}
+@media(max-width:640px){.sec{padding-block:52px}}
+
+/* atendimentos */
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px}
+.tags span{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:8px 16px;font-weight:700;font-size:15px}
+.rules{margin-top:22px;display:grid;gap:8px;color:var(--mut);font-size:15px}
+.rules b{color:var(--ink)}
+
+/* exames */
+.exs{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:0 40px;margin-top:28px;border-top:1px solid var(--line)}
+.ex{padding:18px 0;border-bottom:1px solid var(--line)}
+.ex h3{font-size:17px;font-weight:800;letter-spacing:-.01em}
+.ex p{margin-top:4px;color:var(--mut);font-size:15px}
+
+/* onde estamos */
+.loc{display:grid;grid-template-columns:1.2fr 1fr;gap:32px;margin-top:28px;align-items:start}
+.loc address{font-style:normal;font-size:18px;font-weight:700;line-height:1.5}
+.loc .mut{display:block;margin-top:10px;font-weight:400;font-size:15px;color:var(--mut)}
+.loc .cta{display:flex;gap:10px;flex-wrap:wrap}
+.loc .btn.out{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--line)}
+.loc .hh{margin-top:26px;font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--acc)}
+.hrs{list-style:none;margin:10px 0 0;padding:0;max-width:360px}
+.hrs li{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);font-size:15px}
+.hrs li:first-child{border-top:1px solid var(--line)}
+.hrs span{color:var(--mut)}
+.hrs b{font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
+@media(max-width:760px){.loc{grid-template-columns:1fr}}
+
+/* médicos */
+.docs{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:32px}
+.dc{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px}
+.av{width:48px;height:48px;border-radius:50%;background:var(--soft);color:var(--acc);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;margin-bottom:16px}
+.dc h3{font-size:18px;font-weight:800;letter-spacing:-.01em;line-height:1.25}
+.dc .day{margin-top:10px;font-weight:700;font-size:15px}
+.dc .hr{color:var(--mut);font-size:14px}
+.dc .cv{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-size:14px;color:var(--mut)}
+
+/* como funciona */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:28px;margin-top:32px;counter-reset:s}
+.st{border-top:2px solid var(--ink);padding-top:16px}
+.st .n{font-size:13px;font-weight:800;color:var(--acc);letter-spacing:.08em}
+.st h3{font-size:18px;font-weight:800;margin:6px 0 6px;letter-spacing:-.01em}
+.st p{color:var(--mut);font-size:15px}
+
+/* agendamento */
+.sheet{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:6px 24px 26px;margin-top:28px;max-width:720px}
+.step{padding:22px 0;border-top:1px solid var(--line)}
+.step:first-child{border-top:0}
+.step h3{margin:0 0 14px;font-size:17px;font-weight:800;display:flex;align-items:center;gap:10px}
+.step h3 .n{width:26px;height:26px;border-radius:50%;background:var(--soft);color:var(--acc);display:inline-flex;align-items:center;justify-content:center;font-size:13px;flex:none}
+.grid{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:inherit;font-size:15px;font-weight:600;color:var(--ink);background:transparent;border:1.5px solid var(--line);border-radius:999px;padding:10px 16px;cursor:pointer;min-height:44px}
+.chip[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:var(--on)}
+.chip:disabled{border-style:dashed;color:var(--mut);text-decoration:line-through;cursor:not-allowed}
+.dayg{display:grid;grid-template-columns:repeat(auto-fill,minmax(68px,1fr));gap:8px}
+.dayg .chip{border-radius:16px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;line-height:1.15}
+.dayg .chip small{font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:600;opacity:.8}
+.dayg .chip b{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums}
+.timeg{display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:8px}
+.timeg .chip{border-radius:12px;padding:10px 4px;text-align:center;font-variant-numeric:tabular-nums}
+.timeg .enc{grid-column:1/-1}
+.timeg .enc small{display:block;font-weight:400;font-size:12px;opacity:.85}
+.info{margin:12px 0 0;font-size:14px;color:var(--mut)}
+.docl{margin:0 0 12px;font-size:14px;color:var(--mut)}
+.docl b{color:var(--ink)}
+.empty{margin:0;color:var(--mut);font-size:14px}
+label.l{display:block;font-weight:600;font-size:14px;margin:16px 0 6px}
+input[type=text],input[type=tel],input[type=date]{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:14px;padding:13px 14px}
+.msg{color:var(--bad);min-height:1.4em;margin:10px 0 0;font-size:14px;font-weight:600}
+.go{display:block;width:100%;margin-top:10px;font:inherit;font-weight:800;font-size:16px;text-align:center;text-decoration:none;background:var(--acc);color:var(--on);border:0;border-radius:14px;padding:15px;cursor:pointer}
+.alt{font:inherit;font-weight:600;font-size:14px;background:transparent;color:var(--ink);border:1.5px solid var(--line);border-radius:12px;padding:9px 14px;margin-top:12px;cursor:pointer}
+.resume{margin:0 0 16px;padding:0;list-style:none;display:grid;gap:10px}
+.resume li{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:10px;font-size:15px}
+.resume span{color:var(--mut)}
+.resume b{text-align:right}
+.note{font-size:14px;color:var(--mut);margin:0 0 6px}
+.msg.good{color:var(--acc)}
+
+/* perguntas frequentes */
+.faq{margin-top:28px;max-width:720px;border-top:1px solid var(--line)}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{cursor:pointer;list-style:none;padding:18px 36px 18px 0;font-weight:700;font-size:17px;position:relative}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";position:absolute;right:4px;top:50%;transform:translateY(-50%);font-size:24px;font-weight:400;color:var(--acc)}
+.faq details[open] summary::after{content:"\2212"}
+.faq details p{padding:0 0 18px;color:var(--mut);max-width:38em}
+
+/* botão fixo de WhatsApp */
+.wafix{position:fixed;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:20;display:flex;align-items:center;gap:8px;background:var(--acc);color:var(--on);text-decoration:none;font-weight:800;font-size:15px;padding:13px 18px;border-radius:999px;box-shadow:0 6px 20px rgba(6,24,48,.28)}
+.wafix svg{width:20px;height:20px;flex:none}
+@media(max-width:420px){.wafix span{display:none}.wafix{padding:14px}}
+
+/* rodapé */
+.foot{background:var(--hero);color:#fff;padding-block:44px 96px}
+.foot .wrap{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:28px}
+.foot b{display:block;font-weight:800;margin-bottom:6px}
+.foot p,.foot a{font-size:14px;opacity:.85;line-height:1.7}
+.foot a{display:block;text-decoration:none}
+.foot .fine{grid-column:1/-1;border-top:1px solid rgba(255,255,255,.2);padding-top:18px;font-size:13px;opacity:.7}
+@media(max-width:760px){.foot .wrap{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#topo" aria-label="COI Centro Oftalmológico Itaipuaçu">
+      <svg viewBox="0 0 270 110" aria-hidden="true">
+        <path d="M97.6 31.9A36 36 0 1 0 97.6 78.1" fill="none" stroke="#0CA4B4" stroke-width="17"/>
+        <g stroke="#0CA4B4" stroke-width="5" stroke-linecap="round"><line x1="133" y1="18" x2="141" y2="27"/><line x1="165" y1="9" x2="165" y2="20"/><line x1="197" y1="18" x2="189" y2="27"/></g>
+        <circle cx="165" cy="60" r="33" fill="#EAF8FB" stroke="#0CA4B4" stroke-width="7"/>
+        <circle cx="160" cy="63" r="14" fill="#0CA4B4"/>
+        <circle cx="156" cy="69" r="5" fill="#6DE3F2"/><circle cx="185" cy="43" r="7" fill="#6DE3F2"/>
+        <rect x="228" y="22" width="15" height="72" rx="3" fill="#0CA4B4"/>
+      </svg>
+      <div><b>COI</b><span>Centro Oftalmológico Itaipuaçu</span></div>
+    </a>
+    <nav class="links" aria-label="Seções">
+      <a class="t" href="#medicos">Médicos</a>
+      <a class="t" href="#exames">Exames</a>
+      <a class="t" href="#atendimentos">Convênios</a>
+      <a class="t" href="#local">Localização</a>
+      <a class="btn pri sm" href="#agendar">Agendar consulta</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" id="topo">
+  <div class="wrap">
+    <div>
+      <h1>O melhor da saúde visual começa aqui</h1>
+      <p class="lead">Consultas oftalmológicas com horário marcado, particular e nos principais convênios. Escolha o seu horário em poucos toques: o agendamento é feito direto na agenda da clínica.</p>
+      <div class="cta"><a class="btn pri" href="#agendar">Agendar consulta</a><a class="btn ghost" href="#medicos">Conheça os médicos</a></div>
+    </div>
+    <svg class="iris" viewBox="0 0 340 340" role="img" aria-label="Ilustração de um olho">
+      <circle cx="170" cy="170" r="160" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="1.5"/>
+      <circle cx="170" cy="170" r="128" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="1.5"/>
+      <circle cx="170" cy="170" r="96" fill="#EAF8FB"/>
+      <circle cx="170" cy="170" r="96" fill="none" stroke="#2BC3D1" stroke-width="12"/>
+      <circle cx="158" cy="184" r="40" fill="#0CA4B4"/>
+      <circle cx="144" cy="204" r="13" fill="#6DE3F2"/>
+      <circle cx="226" cy="124" r="19" fill="#6DE3F2"/>
+    </svg>
+  </div>
+</section>
+<div class="factsband"><div class="inner"><div class="grid3">
+  <div class="fact" style="padding:0"><b>4 médicos</b><span>Atendendo às segundas, quintas, sextas e sábados</span></div>
+  <div class="fact" style="padding:0"><b>Particular e convênios</b><span>Unimed, Bradesco, APPAI e SulAmérica</span></div>
+  <div class="fact" style="padding:0"><b>Agendamento online</b><span>Horários livres atualizados na hora</span></div>
+</div></div></div>
+
+<section class="sec" id="atendimentos">
+  <div class="wrap">
+    <p class="eyebrow">Atendimentos</p>
+    <h2>Particular, revisão e convênios</h2>
+    <p class="sub">Cada convênio é atendido por médicos e dias específicos. Ao escolher o tipo de atendimento no agendamento, mostramos só os dias disponíveis para ele.</p>
+    <div class="tags"><span>Particular</span><span>Revisão</span><span>Unimed</span><span>Bradesco</span><span>APPAI</span><span>SulAmérica</span></div>
+    <div class="rules">
+      <p><b>Bradesco, APPAI e SulAmérica:</b> segundas-feiras, com a Dra. Maria Odette.</p>
+      <p><b>Unimed:</b> quintas, sextas e sábados, com o Dr. Antonio Carlos Hallais, a Dra. Maria Estephania e o Dr. Luis Fernando.</p>
+      <p><b>Particular e Revisão:</b> todos os médicos, em todos os dias de atendimento.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec alt" id="exames">
+  <div class="wrap">
+    <p class="eyebrow">Exames</p>
+    <h2>Exames realizados no COI</h2>
+    <div class="exs">
+      <div class="ex"><h3>Fundo de olho</h3><p>Avalia a retina, o nervo óptico e os vasos do fundo do olho.</p></div>
+      <div class="ex"><h3>Exame refrativo</h3><p>Mede o grau (miopia, hipermetropia e astigmatismo) e define a receita de óculos.</p></div>
+      <div class="ex"><h3>Tonometria</h3><p>Mede a pressão dentro do olho, importante para detectar o glaucoma.</p></div>
+      <div class="ex"><h3>Acuidade visual</h3><p>Mede a nitidez da sua visão, de longe e de perto.</p></div>
+      <div class="ex"><h3>Paquimetria</h3><p>Mede a espessura da córnea.</p></div>
+      <div class="ex"><h3>Biomicroscopia</h3><p>Examina com a lâmpada de fenda as estruturas da frente do olho, como córnea, íris e cristalino.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="medicos">
+  <div class="wrap">
+    <p class="eyebrow">Corpo clínico</p>
+    <h2>Quem atende no COI</h2>
+    <div class="docs">
+      <article class="dc"><div class="av">MO</div><h3>Dra. Maria Odette</h3><p class="day">Segundas-feiras</p><p class="hr">8h às 15h40 · consultas a cada 10 minutos</p><p class="cv">Particular, Revisão, Bradesco, APPAI e SulAmérica</p></article>
+      <article class="dc"><div class="av">AH</div><h3>Dr. Antonio Carlos Hallais</h3><p class="day">Quintas-feiras</p><p class="hr">14h às 16h · consultas a cada 15 minutos</p><p class="cv">Particular, Revisão e Unimed</p></article>
+      <article class="dc"><div class="av">ME</div><h3>Dra. Maria Estephania</h3><p class="day">Sextas-feiras</p><p class="hr">8h às 16h30 · consultas a cada 15 minutos</p><p class="cv">Particular, Revisão e Unimed</p></article>
+      <article class="dc"><div class="av">LF</div><h3>Dr. Luis Fernando</h3><p class="day">Sábados</p><p class="hr">8h às 11h30 · consultas a cada 15 minutos</p><p class="cv">Particular, Revisão e Unimed</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="sec alt">
+  <div class="wrap">
+    <p class="eyebrow">Como funciona</p>
+    <h2>Três passos até a sua consulta</h2>
+    <div class="steps">
+      <div class="st"><p class="n">PASSO 1</p><h3>Escolha o horário</h3><p>Selecione o tipo de atendimento, o dia e o horário livre.</p></div>
+      <div class="st"><p class="n">PASSO 2</p><h3>Informe seus dados</h3><p>Preencha nome e telefone. O horário fica reservado na agenda da clínica.</p></div>
+      <div class="st"><p class="n">PASSO 3</p><h3>Compareça no dia</h3><p>Se precisar remarcar ou cancelar, fale com a recepção pelo WhatsApp.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="agendar">
+  <div class="wrap">
+    <p class="eyebrow">Agendamento</p>
+    <h2>Agende sua consulta</h2>
+    <p class="sub">Escolha um horário livre e o agendamento é feito na hora.</p>
+
+    <div class="sheet" id="form">
+      <section class="step" id="secTipo"><h3><span class="n">1</span>Tipo de atendimento</h3><div class="grid" id="tipos"></div><p class="info" id="tipoInfo"></p></section>
+      <section class="step" id="secDay"><h3><span class="n">2</span>Dia</h3><p class="empty" id="dayHint">Escolha primeiro o tipo de atendimento.</p><div class="dayg" id="days"></div></section>
+      <section class="step" id="secTime"><h3><span class="n">3</span>Horário</h3><p class="docl" id="doc" hidden></p><div class="timeg" id="times"></div><p class="empty" id="timeHint">Escolha um dia para ver os horários.</p><p class="info" id="ocNote" role="status"></p></section>
+      <section class="step" id="secForm"><h3><span class="n">4</span>Seus dados</h3>
+        <label class="l" for="nome">Nome completo</label><input type="text" id="nome" autocomplete="name">
+        <label class="l" for="tel">Telefone com DDD</label><input type="tel" id="tel" inputmode="tel" autocomplete="tel" placeholder="(21) 99999-9999">
+        <label class="l">Você já usa óculos ou lentes?</label>
+        <input type="hidden" id="uso" value="Não uso"><div class="grid" id="usoChips"></div>
+        <p class="msg" id="msg" role="alert"></p>
+        <input type="text" id="site" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+        <button class="go" id="book">Continuar para o WhatsApp</button>
+      </section>
+    </div>
+
+    <div class="sheet" id="done" hidden>
+      <section class="step">
+        <h3 id="doneT">Falta só enviar</h3>
+        <ul class="resume" id="resume"></ul>
+        <p class="note" id="doneN">Seu pedido só é confirmado quando a recepção responder no WhatsApp.</p>
+        <a class="go" id="wa" target="_blank" rel="noopener">Abrir o WhatsApp</a>
+        <button class="alt" id="again">Corrigir ou fazer outro pedido</button>
+      </section>
+    </div>
+
+  </div>
+</section>
+
+<section class="sec alt" id="local">
+  <div class="wrap">
+    <p class="eyebrow">Onde estamos</p>
+    <h2>No Shopping Barroco, em Itaipuaçu</h2>
+    <div class="loc">
+      <div>
+        <address>Av. Carlos Marighella, 8384, sala 307<span class="mut">Shopping Barroco · Itaipuaçu, Maricá, RJ · CEP 24936-435</span></address>
+        <h3 class="hh">Horário de funcionamento</h3>
+        <ul class="hrs">
+          <li><span>Segunda</span><b>8h às 15h40</b></li>
+          <li><span>Quinta</span><b>14h às 16h</b></li>
+          <li><span>Sexta</span><b>8h às 16h30</b></li>
+          <li><span>Sábado</span><b>8h às 11h30</b></li>
+        </ul>
+        <p class="mut" style="margin-top:10px;font-size:14px">Terça e quarta: sem atendimento. Domingo: fechado.</p>
+      </div>
+      <div class="cta">
+        <a class="btn pri" href="https://www.google.com/maps/search/?api=1&amp;query=Av.+Carlos+Marighella+8384+Shopping+Barroco+Itaipua%C3%A7u+Maric%C3%A1+RJ" target="_blank" rel="noopener">Como chegar</a>
+        <a class="btn out" href="#agendar">Agendar consulta</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="duvidas">
+  <div class="wrap">
+    <p class="eyebrow">Dúvidas</p>
+    <h2>Perguntas frequentes</h2>
+    <div class="faq">
+      <details><summary>Como funciona o agendamento?</summary><p>Você escolhe o tipo de atendimento, o dia e o horário livre e preenche seus dados. O horário fica reservado na agenda da clínica na hora.</p></details>
+      <details><summary>O horário que escolhi já está confirmado?</summary><p>Sim. Ao concluir, o horário fica reservado. Se houver algum imprevisto, a recepção entra em contato pelo WhatsApp.</p></details>
+      <details><summary>Quais convênios o COI atende?</summary><p>Unimed, Bradesco, APPAI e SulAmérica, além de atendimento particular. Bradesco, APPAI e SulAmérica são atendidos às segundas, com a Dra. Maria Odette. A Unimed é atendida às quintas, sextas e sábados.</p></details>
+      <details><summary>O que é o encaixe?</summary><p>É um pedido sem horário fixo. A recepção avisa pelo WhatsApp assim que houver uma vaga no dia escolhido.</p></details>
+      <details><summary>Como remarco ou cancelo uma consulta?</summary><p>Fale com a recepção pelo WhatsApp, no botão no canto da tela, informando seu nome e o dia da consulta. A recepção cancela ou remarca para você.</p></details>
+      <details><summary>O que a clínica faz com meus dados?</summary><p>Seu nome e telefone são usados apenas para registrar e confirmar a consulta, e não são divulgados.</p></details>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap">
+    <div><b>COI - Centro Oftalmológico Itaipuaçu</b><p>Av. Carlos Marighella, 8384, sala 307<br>Shopping Barroco, Itaipuaçu, Maricá, RJ<br>CEP 24936-435</p></div>
+    <div><b>Contato</b><a href="https://wa.me/5521993984361" target="_blank" rel="noopener">WhatsApp (21) 99398-4361</a><a href="https://www.instagram.com/coi.itaipuacu/" target="_blank" rel="noopener">Instagram @coi.itaipuacu</a><a href="painel.html" rel="nofollow">Área da recepção</a></div>
+    <div><b>Horário de funcionamento</b><p>Segunda: 8h às 15h40<br>Quinta: 14h às 16h<br>Sexta: 8h às 16h30<br>Sábado: 8h às 11h30</p></div>
+    <p class="fine">Seu nome e telefone são usados apenas para registrar e confirmar a consulta.</p>
+  </div>
+</footer>
+
+<a class="wafix" href="https://wa.me/5521993984361?text=Ol%C3%A1!%20Gostaria%20de%20falar%20com%20a%20recep%C3%A7%C3%A3o%20do%20COI." target="_blank" rel="noopener" aria-label="Falar com a recepção pelo WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.5 2 2 6.2 2 11.4c0 2.2.8 4.2 2.2 5.8L3 22l5-1.6c1.2.5 2.6.7 4 .7 5.5 0 10-4.2 10-9.4S17.5 2 12 2zm-3 5.5c.2 0 .4 0 .6.4l.8 1.9c.1.3 0 .5-.1.7l-.5.7c-.1.2-.1.4 0 .6.7 1.2 1.7 2.1 3 2.7.2.1.4.1.6-.1l.8-.9c.2-.2.4-.2.6-.1l1.9.9c.3.1.4.3.4.5 0 .8-.6 1.7-1.5 2-1 .3-2.2.1-3.5-.5-2.5-1.1-4.2-3.4-4.7-5-.3-1-.1-2.1.7-2.9.3-.3.6-.5.9-.5z"/></svg>
+  <span>Falar com a recepção</span>
+</a>
+
+<script>
+(function(){
+  var sel={tipo:null,day:null,time:null}, PHONE="5521993984361";
+  var API="https://script.google.com/macros/s/AKfycbwKpQxU8YSMSjm_XHEzMGJb64BtF4BQ1pBg9THFT48NO-Fpy4bMIJbLV54eSKToc0tL-A/exec", live=API.indexOf("https://")===0;
+  var $=function(id){return document.getElementById(id)};
+  var WD=["dom","seg","ter","qua","qui","sex","sáb"],MES=["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
+  var DOC={1:{n:"Dra. Maria Odette",s:480,e:940,p:10},4:{n:"Dr. Antonio Carlos Hallais",s:840,e:960,p:15},5:{n:"Dra. Maria Estephania",s:480,e:990,p:15},6:{n:"Dr. Luis Fernando",s:480,e:690,p:15}};
+  var carregado=!live,ABERTOS=null,FINS={};
+  try{var gc=JSON.parse(localStorage.getItem("coi-ocup2")||"null");if(live&&gc&&gc.a&&Date.now()-gc.t<604800000){ABERTOS=gc.a;FINS=gc.f||{};var OCUP0=gc.o}}catch(e){}
+  var OCUP=live?(typeof OCUP0!=="undefined"?OCUP0:{}):{"2026-10-26":["08:00","08:10","08:20","08:30","08:40","09:00","09:10","09:20","09:30","09:40","10:00","10:20","10:30","10:40","10:50","11:00","11:10","13:30","13:40","13:50","14:00","14:10","14:30","14:40"]};
+  var TIPOS=["Particular","Unimed","Bradesco","APPAI","SulAmérica","Revisão"],DIAS={1:"segundas",4:"quintas",5:"sextas",6:"sábados"};
+  var USO=["Não uso","Óculos","Lentes de contato","Os dois"];
+  function pad(n){return String(n).padStart(2,"0")}
+  function hm(m){return pad(Math.floor(m/60))+":"+pad(m%60)}
+  function iso(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
+  function br(s){var p=s.split("-");return p[2]+"/"+p[1]}
+  function dow(k){return new Date(k+"T12:00:00").getDay()}
+  function past(day,m){var n=new Date();return day===iso(n)&&m<=n.getHours()*60+n.getMinutes()}
+  function off(day,m,t){var d=dow(day);if((OCUP[day]||[]).indexOf(t)>-1)return true;if(d===1&&m>=690&&m<=780)return true;if(d===5&&m>=720&&m<=780)return true;return false}
+  function ok(d,t){if(!DOC[d])return false;if(t==="Particular"||t==="Revisão")return true;if(t==="Unimed")return d!==1;return d===1}
+  function days(){var o=[],d=new Date(),i=0;while(o.length<12&&i<70){if(sel.tipo&&ok(d.getDay(),sel.tipo)&&(!ABERTOS||ABERTOS.indexOf(iso(d))>-1))o.push(new Date(d));d.setDate(d.getDate()+1);i++}return o}
+  function chip(html,pressed,dis,fn){var b=document.createElement("button");b.type="button";b.className="chip";b.innerHTML=html;b.setAttribute("aria-pressed",pressed?"true":"false");b.disabled=!!dis;if(fn)b.onclick=fn;return b}
+  function grp(cid,hid,opts){var g=$(cid),h=$(hid);g.innerHTML="";opts.forEach(function(o){g.appendChild(chip(o,h.value===o,false,function(){h.value=o;grp(cid,hid,opts)}))})}
+  function drawTipos(){var g=$("tipos");g.innerHTML="";
+    TIPOS.forEach(function(t){g.appendChild(chip(t,sel.tipo===t,false,function(){sel.tipo=t;if(sel.day&&!ok(dow(sel.day),t)){sel.day=null;sel.time=null}drawTipos();drawDays();drawTimes()}))});
+    var i=$("tipoInfo");if(!sel.tipo){i.textContent="";return}
+    i.textContent=(sel.tipo==="Particular"||sel.tipo==="Revisão")?"Atendem todos os médicos: segundas, quintas, sextas e sábados.":"Atendimento "+sel.tipo+": "+[1,4,5,6].filter(function(d){return ok(d,sel.tipo)}).map(function(d){return DOC[d].n+" ("+DIAS[d]+")"}).join(", ")+"."}
+  function drawDays(){var g=$("days"),dl=days(),dh=$("dayHint");g.innerHTML="";
+    if(!sel.tipo){dh.hidden=false;dh.textContent="Escolha primeiro o tipo de atendimento."}else if(!dl.length){dh.hidden=false;dh.textContent="Não há dias com agenda aberta para este atendimento no momento. Fale com a recepção pelo WhatsApp."}else dh.hidden=true;
+    dl.forEach(function(d){var k=iso(d);g.appendChild(chip("<small>"+WD[d.getDay()]+"</small><b>"+d.getDate()+"</b><small>"+MES[d.getMonth()]+"</small>",sel.day===k,false,function(){sel.day=k;sel.time=null;drawDays();drawTimes();loadOcup()}))})}
+  function drawTimes(){var g=$("times"),dc=$("doc");g.innerHTML="";var th=$("timeHint");th.hidden=!!sel.day;dc.hidden=!sel.day;if(!sel.day)return;
+    var c=DOC[dow(sel.day)],m;dc.innerHTML="<b>"+c.n+"</b> · consultas de "+c.p+" em "+c.p+" minutos";
+    var fm=FINS[sel.day]?(+FINS[sel.day].split(":")[0]*60+ +FINS[sel.day].split(":")[1]):c.e;
+    for(m=c.s;m<=fm;m+=c.p){(function(t,mm){g.appendChild(chip(t,sel.time===t,past(sel.day,mm)||off(sel.day,mm,t),function(){sel.time=t;drawTimes()}))})(hm(m),m)}
+    var e=chip("Encaixe<small>sem horário fixo, a recepção avisa</small>",sel.time==="Encaixe",false,function(){sel.time="Encaixe";drawTimes()});e.className+=" enc";g.appendChild(e)}
+  function show(f){$("form").hidden=!f;$("done").hidden=f;try{$("agendar").scrollIntoView()}catch(e){}}
+  function loadOcup(tentativa){tentativa=tentativa||0;
+    if(!live){$("ocNote").textContent="Atenção: a agenda ainda não está conectada. Os horários ocupados podem não aparecer.";return}
+    if(!carregado&&tentativa===0)$("ocNote").textContent="Atualizando horários ocupados...";
+    var falhou=function(r){if(tentativa<1){setTimeout(function(){loadOcup(1)},2500);return}carregado=true;$("ocNote").textContent="Não foi possível carregar os horários ocupados agora. A recepção confirma o horário."+(/[?&]debug/.test(location.search)?" [Detalhe: "+((r&&(r.detalhe||r.erro))||(r&&r.message)||"sem resposta do script")+"]":"");drawDays();drawTimes()};
+    var ctl=(typeof AbortController!=="undefined")?new AbortController():null,tm=setTimeout(function(){if(ctl)ctl.abort()},30000);
+    fetch(API,ctl?{signal:ctl.signal}:undefined).then(function(r){clearTimeout(tm);return r.json()}).then(function(r){
+      if(r&&r.ok){OCUP=r.ocupados||{};ABERTOS=r.abertos||null;FINS=r.fins||{};carregado=true;if(sel.day&&ABERTOS&&ABERTOS.indexOf(sel.day)<0){sel.day=null;sel.time=null}try{localStorage.setItem("coi-ocup2",JSON.stringify({t:Date.now(),o:OCUP,a:ABERTOS,f:FINS}))}catch(e){}
+        $("ocNote").textContent=/[?&]debug/.test(location.search)?"Teste ("+(r.ms||"?")+" ms). Dias abertos: "+(ABERTOS||[]).map(br).join(", ")+". "+Object.keys(r.leitura||{}).map(function(k){return br(k)+" "+r.leitura[k]}).join(" | "):"";drawDays();drawTimes()}
+      else falhou(r)}).catch(function(e){clearTimeout(tm);falhou(e)})}
+  function post(p){return fetch(API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(p)}).then(function(r){return r.json()})}
+  $("book").onclick=function(){
+    var nome=$("nome").value.trim(),tel=$("tel").value.trim(),m=$("msg"),b=$("book");
+    if(!sel.tipo){m.textContent="Escolha o tipo de atendimento.";return}
+    if(!sel.day||!sel.time){m.textContent="Escolha o dia e o horário (ou encaixe).";return}
+    if(nome.length<3){m.textContent="Digite seu nome completo.";return}
+    if(tel.replace(/\D/g,"").length<10){m.textContent="Digite seu telefone com DDD.";return}
+    m.textContent="";
+    var c=DOC[dow(sel.day)],dia=WD[dow(sel.day)]+" "+br(sel.day),hora=sel.time==="Encaixe"?"Encaixe (sem horário fixo)":sel.time;
+    var txt=["Olá! Gostaria de agendar uma consulta no COI - Centro Oftalmológico Itaipuaçu.","","Nome: "+nome,"Telefone: "+tel,"Atendimento: "+sel.tipo,"Uso de óculos/lentes: "+$("uso").value,"Médico(a): "+c.n,"Dia: "+dia,"Horário: "+hora].join("\n");
+    function render(t,nota,wl){
+      $("doneT").textContent=t;$("doneN").textContent=nota;$("wa").textContent=wl;
+      $("wa").href="https://wa.me/"+PHONE+"?text="+encodeURIComponent(txt);
+      var R=$("resume");R.innerHTML="";
+      [["Paciente",nome],["Atendimento",sel.tipo],["Médico(a)",c.n],["Dia",dia],["Horário",hora]].forEach(function(r){var li=document.createElement("li"),a=document.createElement("span"),bb=document.createElement("b");a.textContent=r[0];bb.textContent=r[1];li.appendChild(a);li.appendChild(bb);R.appendChild(li)});
+      show(false)}
+    if(!live){render("Falta só enviar","Seu pedido só é confirmado quando a recepção responder no WhatsApp.","Abrir o WhatsApp");return}
+    b.disabled=true;b.textContent="Agendando...";
+    post({nome:nome,tel:tel,tipo:sel.tipo,uso:$("uso").value,dia:sel.day,hora:sel.time,site:$("site").value})
+    .then(function(r){b.disabled=false;b.textContent="Agendar consulta";
+      if(r&&r.ok){render(r.encaixe?"Pedido de encaixe enviado":"Consulta agendada!",r.encaixe?"A recepção avisa pelo WhatsApp assim que houver uma vaga.":"Seu horário está reservado. Para remarcar ou cancelar, fale com a recepção.","Avisar a recepção pelo WhatsApp (opcional)");loadOcup()}
+      else{m.textContent=(r&&r.erro)||"Não foi possível agendar. Tente de novo.";if(r&&r.codigo==="ocupado"){sel.time=null;loadOcup()}}})
+    .catch(function(){b.disabled=false;b.textContent="Agendar consulta";render("Não conseguimos agendar direto","Envie o pedido pelo WhatsApp e a recepção confirma o horário.","Abrir o WhatsApp")})
+  };
+  $("again").onclick=function(){show(true)};
+  grp("usoChips","uso",USO);drawTipos();drawDays();drawTimes();
+  if(live){$("book").textContent="Agendar consulta";setInterval(loadOcup,60000)}loadOcup();
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Painel da recepção COI</title>
+<style>
+:root{--bg:#EEF4FB;--card:#fff;--ink:#0B2A52;--mut:#4E6786;--line:#C5D5EA;--acc:#087F8C;--on:#fff;--hero:#0B4AA2;--bad:#A3271F;--badbg:#FDECEA;--okbg:#E3F5EC;--ok:#146B3A;--font:system-ui,-apple-system,"Segoe UI",sans-serif}
+@media (prefers-color-scheme:dark){:root{--bg:#071B3A;--card:#0E2B57;--ink:#E8F1FB;--mut:#9DB6D6;--line:#24467A;--acc:#3CC8D6;--on:#041A2E;--bad:#FF9E96;--badbg:#4A1E1B;--okbg:#10382A;--ok:#8FE0B0;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--font);padding:16px 16px 60px}
+main{max-width:680px;margin:0 auto}
+header{background:var(--hero);color:#fff;border-radius:16px;padding:16px 18px;margin-bottom:14px}
+h1{margin:0;font-size:21px}header p{margin:2px 0 0;font-size:14px}
+h2{font-size:17px;margin:0 0 10px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+label.l{display:block;font-weight:600;font-size:14px;margin:8px 0 4px}
+input,select{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:10px}
+.btn{font:inherit;font-weight:700;background:var(--acc);color:var(--on);border:0;border-radius:10px;padding:10px 14px;cursor:pointer;min-height:44px;text-decoration:none;display:inline-block}
+.alt{font:inherit;font-weight:600;background:transparent;color:var(--ink);border:1.5px solid var(--line);border-radius:10px;padding:8px 12px;cursor:pointer;min-height:40px}
+.bad{color:var(--bad);border-color:var(--bad)}
+.tabs{display:flex;gap:8px;margin-bottom:12px}
+.tabs button{flex:1}
+.tabs [aria-pressed=true]{background:var(--acc);color:var(--on);border-color:var(--acc)}
+.msg{min-height:1.3em;font-size:14px;font-weight:600;color:var(--bad);margin:6px 0 0}
+.msg.ok{color:var(--ok)}
+.row{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid var(--line)}
+.row:first-of-type{border-top:0}
+.row .t{font-weight:800;font-variant-numeric:tabular-nums;min-width:52px;color:var(--acc)}
+.row .w{flex:1;min-width:0;overflow-wrap:anywhere}
+.row small{color:var(--mut);display:block}
+.occ{background:var(--badbg);border-radius:10px;padding:10px;margin:6px 0}
+.free .t{color:var(--ok)}
+.tag{font-size:12px;font-weight:700;border-radius:99px;padding:2px 9px;background:var(--okbg);color:var(--ok)}
+.tag.f{background:var(--badbg);color:var(--bad)}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+[hidden]{display:none!important}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+</style>
+</head>
+<body>
+<main>
+<header><h1>Painel da recepção</h1><p>COI - Centro Oftalmológico Itaipuaçu · uso interno</p></header>
+
+<div class="box" id="login">
+  <label class="l" for="senha">Senha da recepção</label>
+  <input type="password" id="senha" autocomplete="current-password">
+  <p class="msg" id="mLogin" role="alert"></p>
+  <button class="btn" id="entrar" style="margin-top:8px">Entrar</button>
+</div>
+
+<div id="app" hidden>
+  <div class="tabs">
+    <button class="alt" id="tDias" aria-pressed="true">Dias</button>
+    <button class="alt" id="tDia" aria-pressed="false">Horários</button>
+    <button class="alt" id="tZap" aria-pressed="false">WhatsApp</button>
+  </div>
+  <p class="msg" id="msg" role="status"></p>
+
+  <section id="vDias">
+    <div class="box">
+      <h2>Abrir um novo dia</h2>
+      <label class="l" for="novoDia">Data (segunda, quinta, sexta ou sábado)</label>
+      <input type="date" id="novoDia">
+      <label class="l" for="novoFim">Último horário (opcional)</label>
+      <input type="time" id="novoFim">
+      <div class="acts"><button class="btn" id="abrir">Abrir dia para agendamento</button></div>
+    </div>
+    <div class="box"><h2>Dias cadastrados</h2><div id="listaDias"></div></div>
+  </section>
+
+  <section id="vDia" hidden>
+    <div class="box">
+      <label class="l" for="diaSel">Dia</label>
+      <select id="diaSel"></select>
+      <div id="cab"></div>
+    </div>
+    <div class="box" id="grade"></div>
+    <div class="box" id="encBox"></div>
+  </section>
+
+  <section id="vZap" hidden>
+    <div class="box">
+      <label class="l" for="diaZap">Dia dos lembretes</label>
+      <select id="diaZap"></select>
+      <label class="l" for="tipoMsg">Mensagem</label>
+      <select id="tipoMsg"><option value="vespera">Confirmação da véspera (dia anterior)</option><option value="dia">Confirmação do dia da consulta</option></select>
+    </div>
+    <div id="zapLista"></div>
+  </section>
+</div>
+</main>
+<script>
+(function(){
+  var API="https://script.google.com/macros/s/AKfycbwKpQxU8YSMSjm_XHEzMGJb64BtF4BQ1pBg9THFT48NO-Fpy4bMIJbLV54eSKToc0tL-A/exec";
+  var WD=["domingo","segunda","terça","quarta","quinta","sexta","sábado"];
+  var $=function(i){return document.getElementById(i)};
+  var senha="",dias=[],atual=null,aba="Dias";
+  function br(s){var p=s.split("-");return p[2]+"/"+p[1]}
+  function wd(s){return WD[new Date(s+"T12:00:00").getDay()]}
+  function pad(n){return String(n).padStart(2,"0")}
+  function hojeIso(){var d=new Date();return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
+  function first(n){var f=(n||"").trim().split(/\s+/)[0]||"";return f.charAt(0).toUpperCase()+f.slice(1).toLowerCase()}
+  function msg(t,ok){var m=$("msg");m.textContent=t||"";m.className="msg"+(ok?" ok":"")}
+  function api(p){p.acao="admin";p.senha=senha;
+    return fetch(API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(p)}).then(function(r){return r.json()})}
+  function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+  function btn(t,c,fn){var b=el("button",c,t);b.type="button";b.onclick=fn;return b}
+  function go(a){aba=a;[["Dias","vDias","tDias"],["Horários","vDia","tDia"],["WhatsApp","vZap","tZap"]].forEach(function(x){$(x[1]).hidden=a!==x[0];$(x[2]).setAttribute("aria-pressed",a===x[0]?"true":"false")});msg("")}
+  $("tDias").onclick=function(){go("Dias");carregarResumo()};
+  $("tDia").onclick=function(){go("Horários");if(atual)carregarDia(atual)};
+  $("tZap").onclick=function(){go("WhatsApp");carregarZap()};
+
+  $("entrar").onclick=function(){
+    var s=$("senha").value;if(!s){$("mLogin").textContent="Digite a senha.";return}
+    senha=s;$("entrar").disabled=true;$("mLogin").textContent="";
+    api({op:"resumo"}).then(function(r){$("entrar").disabled=false;
+      if(r&&r.ok){try{sessionStorage.setItem("coi-senha",s)}catch(e){}$("login").hidden=true;$("app").hidden=false;aplicarResumo(r)}
+      else $("mLogin").textContent=(r&&r.erro)||"Não foi possível entrar."})
+    .catch(function(){$("entrar").disabled=false;$("mLogin").textContent="Sem conexão com a agenda. Tente de novo."})
+  };
+  $("senha").addEventListener("keydown",function(e){if(e.key==="Enter")$("entrar").click()});
+  try{var s0=sessionStorage.getItem("coi-senha");if(s0){$("senha").value=s0;$("entrar").click()}}catch(e){}
+
+  function carregarResumo(){api({op:"resumo"}).then(function(r){if(r&&r.ok)aplicarResumo(r);else msg((r&&r.erro)||"Erro ao carregar.")}).catch(function(){msg("Sem conexão.")})}
+  function aplicarResumo(r){
+    dias=r.dias;var L=$("listaDias");L.innerHTML="";
+    if(!dias.length)L.appendChild(el("p","",  "Nenhum dia aberto ainda. Abra um dia acima."));
+    dias.forEach(function(d){
+      var row=el("div","row"),w=el("div","w");
+      w.appendChild(el("b","",wd(d.dia)+" "+br(d.dia)+" · "+d.medico));
+      var sm=el("small","",d.pacientes+" horários ocupados"+(d.encaixes?" · "+d.encaixes+" encaixe(s)":""));w.appendChild(sm);
+      var tg=el("span","tag"+(d.aberto?"":" f"),d.aberto?"Aberto":"Bloqueado");
+      var a=el("div","acts");a.style.margin=0;
+      a.appendChild(btn("Horários","alt",function(){atual=d.dia;go("Horários");carregarDia(d.dia)}));
+      a.appendChild(btn(d.aberto?"Bloquear":"Reabrir","alt"+(d.aberto?" bad":""),function(){
+        if(d.aberto&&!confirm("Bloquear "+wd(d.dia)+" "+br(d.dia)+"? O site deixa de mostrar este dia. Pacientes já marcados continuam salvos."))return;
+        api({op:d.aberto?"fechar":"reabrir",dia:d.dia}).then(function(x){if(x&&x.ok){msg(d.aberto?"Dia bloqueado.":"Dia reaberto.",true);carregarResumo()}else msg((x&&x.erro)||"Erro.")})}));
+      row.appendChild(w);row.appendChild(tg);row.appendChild(a);L.appendChild(row)});
+    ["diaSel","diaZap"].forEach(function(id){var s=$(id),v=s.value||atual;s.innerHTML="";
+      dias.forEach(function(d){var o=el("option","",wd(d.dia)+" "+br(d.dia)+(d.aberto?"":" (bloqueado)"));o.value=d.dia;s.appendChild(o)});
+      if(v&&dias.some(function(d){return d.dia===v}))s.value=v;else if(dias.length){var h=hojeIso(),n=dias.filter(function(d){return d.dia>=h})[0];s.value=(n||dias[0]).dia}});
+    if(!atual&&dias.length)atual=$("diaSel").value;
+  }
+  $("abrir").onclick=function(){
+    var d=$("novoDia").value;if(!d){msg("Escolha a data.");return}
+    api({op:"abrir",dia:d,fim:$("novoFim").value}).then(function(r){if(r&&r.ok){msg("Dia aberto para agendamento.",true);$("novoDia").value="";carregarResumo()}else msg((r&&r.erro)||"Erro.")}).catch(function(){msg("Sem conexão.")})};
+
+  $("diaSel").onchange=function(){atual=$("diaSel").value;carregarDia(atual)};
+  function carregarDia(d){if(!d)return;api({op:"dia",dia:d}).then(function(r){if(r&&r.ok)desenhaDia(r);else msg((r&&r.erro)||"Erro.")}).catch(function(){msg("Sem conexão.")})}
+  function desenhaDia(r){
+    var cab=$("cab");cab.innerHTML="";
+    cab.appendChild(el("p","",r.medico+" · consultas de "+r.intervalo+" em "+r.intervalo+" min · "+(r.aberto?"aberto no site":"BLOQUEADO no site")));
+    var lf=el("label","l","Último horário do dia");cab.appendChild(lf);
+    var fi=el("input");fi.type="time";fi.value=r.fim;cab.appendChild(fi);
+    var a=el("div","acts");
+    a.appendChild(btn("Salvar último horário","alt",function(){api({op:"fim",dia:r.dia,fim:fi.value}).then(function(x){if(x&&x.ok){msg("Salvo.",true);carregarDia(r.dia)}else msg((x&&x.erro)||"Erro.")})}));
+    a.appendChild(btn(r.aberto?"Bloquear dia":"Reabrir dia","alt"+(r.aberto?" bad":""),function(){
+      if(r.aberto&&!confirm("Bloquear este dia?"))return;
+      api({op:r.aberto?"fechar":"reabrir",dia:r.dia}).then(function(x){if(x&&x.ok){msg("Feito.",true);carregarDia(r.dia);carregarResumo()}else msg((x&&x.erro)||"Erro.")})}));
+    cab.appendChild(a);
+    var G=$("grade");G.innerHTML="";G.appendChild(el("h2","","Horários"));
+    r.horarios.forEach(function(h){
+      var ocup=h.pacientes.length>0,row=el("div","row"+(ocup?"":" free"));
+      row.appendChild(el("span","t",h.hora));
+      var w=el("div","w");
+      if(ocup){h.pacientes.forEach(function(p){w.appendChild(el("b","",p.nome));w.appendChild(el("small","",[p.tipo,p.tel].filter(Boolean).join(" · ")+(p.origem==="site"?" · pelo site":"")))});}
+      else w.appendChild(el("span","tag","livre"));
+      row.appendChild(w);
+      if(ocup&&h.pacientes[0].origem==="planilha")row.appendChild(el("small","","na planilha"));else if(ocup)row.appendChild(btn("Liberar","alt bad",function(){if(!confirm("Liberar "+h.hora+" ("+h.pacientes[0].nome+")?"))return;api({op:"liberar",dia:r.dia,hora:h.hora,i:0}).then(function(x){if(x&&x.ok){msg("Horário liberado.",true);carregarDia(r.dia)}else msg((x&&x.erro)||"Erro.")})}));
+      else row.appendChild(btn("Ocupar","alt",function(){formOcupar(row,r,h.hora)}));
+      G.appendChild(row)});
+    var E=$("encBox");E.innerHTML="";E.appendChild(el("h2","","Encaixes (sem horário fixo)"));
+    if(!r.encaixes.length)E.appendChild(el("p","","Nenhum encaixe."));
+    r.encaixes.forEach(function(p,i){var row=el("div","row"),w=el("div","w");w.appendChild(el("b","",p.nome));w.appendChild(el("small","",[p.tipo,p.tel].filter(Boolean).join(" · ")));row.appendChild(w);
+      row.appendChild(btn("Remover","alt bad",function(){api({op:"encaixe_remover",dia:r.dia,i:i}).then(function(x){if(x&&x.ok)carregarDia(r.dia);else msg((x&&x.erro)||"Erro.")})}));E.appendChild(row)});
+    E.appendChild(btn("+ Adicionar encaixe","alt",function(){var n=prompt("Nome do paciente:");if(!n)return;var t=prompt("Telefone (opcional):")||"";api({op:"encaixe",dia:r.dia,nome:n,tel:t}).then(function(x){if(x&&x.ok)carregarDia(r.dia);else msg((x&&x.erro)||"Erro.")})}))
+  }
+  function formOcupar(row,r,hora){
+    if(row.nextSibling&&row.nextSibling.className==="occ"){row.nextSibling.remove();return}
+    var f=el("div","occ");
+    var n=el("input");n.placeholder='Nome do paciente (ou "Bloqueado")';
+    var t=el("input");t.placeholder="Telefone com DDD (opcional)";t.type="tel";
+    var s=el("select");["Particular","Unimed","Bradesco","APPAI","SulAmérica","Revisão","Outro"].forEach(function(x){var o=el("option","",x);o.value=x;s.appendChild(o)});
+    f.appendChild(n);f.appendChild(t);f.appendChild(s);
+    var a=el("div","acts");
+    a.appendChild(btn("Marcar "+hora+" como ocupado","btn",function(){api({op:"ocupar",dia:r.dia,hora:hora,nome:n.value,tel:t.value,tipo:s.value}).then(function(x){if(x&&x.ok){msg("Horário ocupado.",true);carregarDia(r.dia)}else msg((x&&x.erro)||"Erro.")})}));
+    a.appendChild(btn("Cancelar","alt",function(){f.remove()}));f.appendChild(a);
+    row.parentNode.insertBefore(f,row.nextSibling);n.focus()
+  }
+
+  /* ---- WhatsApp ---- */
+  $("diaZap").onchange=carregarZap;$("tipoMsg").onchange=carregarZap;
+  function carregarZap(){var d=$("diaZap").value;if(!d){$("zapLista").innerHTML="";return}
+    api({op:"dia",dia:d}).then(function(r){if(r&&r.ok)desenhaZap(r);else msg((r&&r.erro)||"Erro.")}).catch(function(){msg("Sem conexão.")})}
+  function desenhaZap(r){
+    var L=$("zapLista");L.innerHTML="";var key="coi-zap-"+$("tipoMsg").value+"-"+r.dia,st={};try{st=JSON.parse(localStorage.getItem(key)||"{}")}catch(e){}
+    var cons=[];r.horarios.forEach(function(h){h.pacientes.forEach(function(p){cons.push({t:h.hora,n:p.nome,tel:p.tel||""})})});
+    if(!cons.length){L.appendChild(el("div","box","Nenhum paciente neste dia."));return}
+    var amanha=new Date();amanha.setDate(amanha.getDate()+1);var am=amanha.getFullYear()+"-"+pad(amanha.getMonth()+1)+"-"+pad(amanha.getDate());
+    var dd=$("tipoMsg").value==="dia",quando=(r.dia===am?"amanhã, ":r.dia===hojeIso()?"hoje, ":"")+wd(r.dia)+" ("+br(r.dia)+")";
+    var grupos=[],mapa={};
+    cons.forEach(function(c,i){var d=c.tel.replace(/\D/g,""),k=d.length>=10?d:"s"+i;if(!mapa[k]){mapa[k]={tel:c.tel,d:d,it:[]};grupos.push(mapa[k])}mapa[k].it.push(c)});
+    grupos.forEach(function(g){
+      var id=g.it.map(function(x){return x.t+x.n}).join("|"),ok=g.d.length>=10,u=g.it;
+      var cab="Olá"+(u.length===1?", "+first(u[0].n):"")+"! Aqui é do COI - Centro Oftalmológico Itaipuaçu. ";
+      var m=dd?(u.length===1?cab+"Passando para confirmar sua consulta de hoje, às "+u[0].t+", com "+r.medico+", no Shopping Barroco, sala 307. Estamos esperando você! Se tiver algum imprevisto, avise por aqui.":
+        cab+"Passando para confirmar as consultas de hoje, com "+r.medico+", no Shopping Barroco, sala 307:\n"+u.map(function(x){return "• "+first(x.n)+" às "+x.t}).join("\n")+"\nEstamos esperando vocês! Se tiver algum imprevisto, avise por aqui."):
+        (u.length===1?cab+"Lembramos da sua consulta "+quando+", às "+u[0].t+", com "+r.medico+". Podemos confirmar sua presença? Se não puder comparecer, avise para reagendarmos.":
+        cab+"Lembramos das consultas "+quando+", com "+r.medico+":\n"+u.map(function(x){return "• "+first(x.n)+" às "+x.t}).join("\n")+"\nPodemos confirmar a presença de todos? Se alguém não puder comparecer, avise para reagendarmos.");
+      var b=el("div","box");b.style.opacity=st[id]?".55":"1";
+      var top=el("div","row");top.style.border=0;top.style.padding=0;
+      var w=el("div","w");w.appendChild(el("b","",u.map(function(x){return x.n}).join(" · ")));w.appendChild(el("small","",u.map(function(x){return x.t}).join(" e ")+(g.tel?" · "+g.tel:"")));
+      top.appendChild(w);b.appendChild(top);
+      var a=el("div","acts");
+      if(ok){var l=el("a","btn","Enviar no WhatsApp");l.target="_blank";l.rel="noopener";l.href="https://wa.me/55"+g.d.slice(-11)+"?text="+encodeURIComponent(m);a.appendChild(l)}
+      else a.appendChild(el("span","tag f","Sem telefone válido"));
+      var lb=el("label","");lb.style.cssText="display:flex;gap:6px;align-items:center;margin-left:auto";
+      var ch=el("input");ch.type="checkbox";ch.style.width="auto";ch.checked=!!st[id];
+      ch.onchange=function(){st[id]=ch.checked;try{localStorage.setItem(key,JSON.stringify(st))}catch(e){}b.style.opacity=ch.checked?".55":"1"};
+      lb.appendChild(ch);lb.appendChild(document.createTextNode("Enviado"));a.appendChild(lb);b.appendChild(a);L.appendChild(b)})
+  }
+})();
+</script>
+</body>
+</html>
